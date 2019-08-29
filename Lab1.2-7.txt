@@ -1,0 +1,159 @@
+
+mininet@mininet-vm:~$ sudo mn
+*** Creating network
+*** Adding controller
+*** Adding hosts:
+h1 h2
+*** Adding switches:
+s1
+*** Adding links:
+(h1, s1) (h2, s1)
+*** Configuring hosts
+h1 h2
+*** Starting controller
+c0
+*** Starting 1 switches
+s1 ...
+*** Starting CLI:
+mininet> nodes
+available nodes are:
+c0 h1 h2 s1
+mininet> net
+h1 h1-eth0:s1-eth1
+h2 h2-eth0:s1-eth2
+s1 lo:  s1-eth1:h1-eth0 s1-eth2:h2-eth0
+c0
+mininet> h1 ifconfig -a
+h1-eth0   Link encap:Ethernet  HWaddr 92:fd:85:f4:f6:4d
+          inet addr:10.0.0.1  Bcast:10.255.255.255  Mask:255.0.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+mininet> h1 ping c1 h2
+ping: unknown host c1
+mininet> h1 ping c 1 h2
+ping: unknown host c
+mininet> exit
+*** Stopping 1 controllers
+c0
+*** Stopping 2 links
+..
+*** Stopping 1 switches
+s1
+*** Stopping 2 hosts
+h1 h2
+*** Done
+completed in 27.952 seconds
+mininet@mininet-vm:~$ clear
+mininet@mininet-vm:~$ sudo mn
+*** Creating network
+*** Adding controller
+*** Adding hosts:
+h1 h2
+*** Adding switches:
+s1
+*** Adding links:
+(h1, s1) (h2, s1)
+*** Configuring hosts
+h1 h2
+*** Starting controller
+c0
+*** Starting 1 switches
+s1 ...
+*** Starting CLI:
+mininet> nodes
+available nodes are:
+c0 h1 h2 s1
+mininet> net
+h1 h1-eth0:s1-eth1
+h2 h2-eth0:s1-eth2
+s1 lo:  s1-eth1:h1-eth0 s1-eth2:h2-eth0
+c0
+mininet> h1 ifconfig -a
+h1-eth0   Link encap:Ethernet  HWaddr 82:2f:c4:d8:c6:04
+          inet addr:10.0.0.1  Bcast:10.255.255.255  Mask:255.0.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+mininet> h1 ping -c 1 h2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=2.34 ms
+
+--- 10.0.0.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 2.343/2.343/2.343/0.000 ms
+
+mininet> pingall
+*** Ping: testing ping reachability
+h1 -> h2
+h2 -> h1
+*** Results: 0% dropped (2/2 received)
+
+mininet> iperf
+*** Iperf: testing TCP bandwidth between h1 and h2
+*** Results: ['27.0 Gbits/sec', '27.0 Gbits/sec']
+
+mininet> iperfudp
+*** Iperf: testing UDP bandwidth between h1 and h2
+*** Results: ['10M', '10.0 Mbits/sec', '10.0 Mbits/sec']
+
+mininet@mininet-vm:~$ sudo mn --link tc,bw=100,delay=5ms
+*** Creating network
+*** Adding controller
+*** Adding hosts:
+h1 h2
+*** Adding switches:
+s1
+*** Adding links:
+(100.00Mbit 5ms delay) (100.00Mbit 5ms delay) (h1, s1) (100.00Mbit 5ms delay) (100.00Mbit 5ms delay) (h2, s1)
+*** Configuring hosts
+h1 h2
+*** Starting controller
+c0
+*** Starting 1 switches
+s1 ...(100.00Mbit 5ms delay) (100.00Mbit 5ms delay)
+*** Starting CLI:
+mininet> h1 ping h2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=44.4 ms
+64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=21.4 ms
+64 bytes from 10.0.0.2: icmp_seq=3 ttl=64 time=21.4 ms
+64 bytes from 10.0.0.2: icmp_seq=4 ttl=64 time=20.3 ms
+64 bytes from 10.0.0.2: icmp_seq=5 ttl=64 time=20.7 ms
+64 bytes from 10.0.0.2: icmp_seq=6 ttl=64 time=21.6 ms
+^C
+--- 10.0.0.2 ping statistics ---
+6 packets transmitted, 6 received, 0% packet loss, time 5007ms
+rtt min/avg/max/mdev = 20.398/25.025/44.401/8.675 ms
+
+mininet> iperf
+*** Iperf: testing TCP bandwidth between h1 and h2
+*** Results: ['94.5 Mbits/sec', '111 Mbits/sec']
+
+mininet> iperfudp
+*** Iperf: testing UDP bandwidth between h1 and h2
+*** Results: ['10M', '10.0 Mbits/sec', '10.0 Mbits/sec']
+
+
